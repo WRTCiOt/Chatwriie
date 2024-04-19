@@ -35,7 +35,6 @@
         border-radius: 20px;
         padding: 5px;
         color: white;
-        background-image: url('file:///C:/Users/Rudi/Desktop/chat%20gegen/galerie-öffnen.png'); /* Hier wird der absolute Pfad verwendet */
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -95,7 +94,10 @@
 <body>
 <div id="input-area">
     <input type="text" id="message-input" placeholder="Write here" onkeypress="handleKeyPress(event)">
-    <img id="gallery-icon" src="galerie-öffnen.png" alt="Gallery Icon" onclick="openGallery()">
+    <label for="file-upload">
+        <img id="gallery-icon" src="galerie-öffnen.png" alt="Gallery Icon">
+    </label>
+    <input type="file" id="file-upload" style="display:none" accept="image/*" onchange="handleFileSelect(event)">
 </div>
 
 <div id="message-container"></div>
@@ -120,15 +122,19 @@
         }
     }
 
-    function openGallery() {
-        selectedImage = "file:///C:/Users/Rudi/Desktop/chat%20gegen/galerie-öffnen.png"; // Hier wird der absolute Pfad verwendet
-        updateImagePreview(selectedImage);
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            selectedImage = event.target.result;
+            updateImagePreview(selectedImage);
+        };
+        reader.readAsDataURL(file);
     }
 
     function updateImagePreview(imageSrc) {
         let messageInput = document.getElementById("message-input");
         messageInput.style.backgroundImage = `url(${imageSrc})`;
-        messageInput.style.backgroundSize = "cover";
     }
 
     function addMessage(text) {
@@ -165,6 +171,16 @@
 
         messageInput.value = "";
     }
+
+    // Event Listener für das Öffnen der Galerie auf Mobilgeräten
+    document.getElementById("gallery-icon").addEventListener("click", function(event) {
+        document.getElementById("file-upload").click();
+    });
+
+    // Verhindere das Kontextmenü (Rechtsklick)
+    document.getElementById("gallery-icon").addEventListener("contextmenu", function(event) {
+        event.preventDefault();
+    });
 </script>
 </body>
 </html>
