@@ -14,7 +14,7 @@
 
     #input-area {
         position: fixed;
-        bottom: 20px;
+        bottom: 80px; /* Höhere Position für das Bild */
         left: 50%;
         transform: translateX(-50%);
         width: 80%;
@@ -24,6 +24,14 @@
         padding: 10px;
         color: white;
         display: flex;
+        align-items: flex-start; /* Das Bild oben ausrichten */
+    }
+
+    #image-preview {
+        display: none; /* Standardmäßig ausblenden */
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
     }
 
     #message-input {
@@ -43,11 +51,10 @@
     #gallery-icon {
         width: 40px;
         height: 40px;
-        margin-left: 10px;
         cursor: pointer;
     }
 
-    .message {
+    .message-container {
         max-width: 70%;
         margin: 10px;
         padding: 10px;
@@ -56,6 +63,18 @@
         border-radius: 10px;
         float: right;
         clear: both;
+        position: relative; /* Position für das Textelement festlegen */
+    }
+
+    .message {
+        margin-bottom: 5px; /* Abstand zwischen Bild und Text */
+    }
+
+    .message img {
+        max-width: 100px; /* Maximale Breite des Bildes */
+        border-radius: 5px; /* Abgerundete Ecken */
+        display: block; /* Bild als Blockelement anzeigen */
+        margin-bottom: 5px; /* Abstand unter dem Bild */
     }
 
     .response {
@@ -77,7 +96,7 @@
             padding: 0.5vw;
         }
 
-        .message {
+        .message-container {
             max-width: 70vw;
             margin: 2vw;
             padding: 2vw;
@@ -88,11 +107,22 @@
             width: 10vw;
             height: 10vw;
         }
+
+        #image-preview {
+            width: 10vw;
+            height: 10vw;
+        }
+
+        .message img {
+            max-width: 20vw; /* Maximale Breite des Bildes auf mobilen Geräten */
+        }
     }
 </style>
 </head>
 <body>
 <div id="input-area">
+    <!-- Bildvorschau -->
+    <img id="image-preview" src="" alt="Image Preview">
     <input type="text" id="message-input" placeholder="Write here" onkeypress="handleKeyPress(event)">
     <label for="file-upload">
         <img id="gallery-icon" src="galerie-öffnen.png" alt="Gallery Icon">
@@ -114,6 +144,8 @@
                 if (selectedImage) {
                     addMessageWithImage(messageText, selectedImage);
                     selectedImage = null;
+                    // Verstecke die Bildvorschau nach dem Senden der Nachricht
+                    document.getElementById("image-preview").style.display = "none";
                 } else {
                     addMessage(messageText);
                 }
@@ -127,19 +159,17 @@
         const reader = new FileReader();
         reader.onload = function(event) {
             selectedImage = event.target.result;
-            updateImagePreview(selectedImage);
+            // Anzeigen der Bildvorschau, nachdem ein Bild ausgewählt wurde
+            document.getElementById("image-preview").src = selectedImage;
+            document.getElementById("image-preview").style.display = "inline-block";
         };
         reader.readAsDataURL(file);
-    }
-
-    function updateImagePreview(imageSrc) {
-        let messageInput = document.getElementById("message-input");
-        messageInput.style.backgroundImage = `url(${imageSrc})`;
     }
 
     function addMessage(text) {
         let newMessage = document.createElement("div");
         newMessage.textContent = text;
+        newMessage.classList.add("message-container");
         newMessage.classList.add("message");
 
         messageContainer.appendChild(newMessage);
@@ -148,7 +178,7 @@
 
     function addMessageWithImage(text, imageSrc) {
         let newMessage = document.createElement("div");
-        newMessage.textContent = text;
+        newMessage.classList.add("message-container");
         newMessage.classList.add("message");
 
         let image = document.createElement("img");
@@ -157,6 +187,10 @@
         image.style.borderRadius = "5px";
         newMessage.appendChild(image);
 
+        let textNode = document.createElement("div");
+        textNode.textContent = text;
+        newMessage.appendChild(textNode);
+
         messageContainer.appendChild(newMessage);
         messageContainer.scrollTop = messageContainer.scrollHeight;
     }
@@ -164,6 +198,7 @@
     function addResponse(text, messageInput) {
         let responseMessage = document.createElement("div");
         responseMessage.textContent = text;
+        responseMessage.classList.add("message-container");
         responseMessage.classList.add("message", "response");
 
         messageContainer.appendChild(responseMessage);
@@ -171,16 +206,6 @@
 
         messageInput.value = "";
     }
-
-    // Event Listener für das Öffnen der Galerie auf Mobilgeräten
-    document.getElementById("gallery-icon").addEventListener("click", function(event) {
-        document.getElementById("file-upload").click();
-    });
-
-    // Verhindere das Kontextmenü (Rechtsklick)
-    document.getElementById("gallery-icon").addEventListener("contextmenu", function(event) {
-        event.preventDefault();
-    });
 </script>
 </body>
 </html>
