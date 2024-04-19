@@ -34,6 +34,13 @@
     #chat-bubble:not(:hover) {
         transition: transform 0.8s; /* Übergangsdauer für Rückkehr zur normalen Größe */
     }
+
+    /* Media Query für mobile Geräte */
+    @media only screen and (max-width: 600px) {
+        #chat-bubble {
+            width: 15%; /* Größeres Bild auf mobilen Geräten */
+        }
+    }
 </style>
 </head>
 <body>
