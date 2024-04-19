@@ -27,11 +27,30 @@
         align-items: flex-start; /* Das Bild oben ausrichten */
     }
 
+    #image-preview-container {
+        position: relative;
+        margin-right: 10px; /* Abstand zwischen Bildvorschau und Texteingabe */
+    }
+
     #image-preview {
         display: none; /* Standardmäßig ausblenden */
-        width: 40px;
-        height: 40px;
-        margin-right: 10px;
+        max-width: 100%;
+        max-height: 200px; /* Höhe der Bildvorschau begrenzen */
+        border-radius: 10px;
+    }
+
+    #delete-image {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 20px;
+        height: 20px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
     }
 
     #message-input {
@@ -108,9 +127,12 @@
             height: 10vw;
         }
 
+        #image-preview-container {
+            margin-right: 2vw; /* Abstand zwischen Bildvorschau und Texteingabe auf mobilen Geräten */
+        }
+
         #image-preview {
-            width: 10vw;
-            height: 10vw;
+            max-height: 15vw; /* Höhe der Bildvorschau auf mobilen Geräten begrenzen */
         }
 
         .message img {
@@ -122,7 +144,10 @@
 <body>
 <div id="input-area">
     <!-- Bildvorschau -->
-    <img id="image-preview" src="" alt="Image Preview">
+    <div id="image-preview-container">
+        <img id="image-preview" src="" alt="Image Preview">
+        <div id="delete-image" onclick="deleteImage()">x</div>
+    </div>
     <input type="text" id="message-input" placeholder="Write here" onkeypress="handleKeyPress(event)">
     <label for="file-upload">
         <img id="gallery-icon" src="galerie-öffnen.png" alt="Gallery Icon">
@@ -161,9 +186,15 @@
             selectedImage = event.target.result;
             // Anzeigen der Bildvorschau, nachdem ein Bild ausgewählt wurde
             document.getElementById("image-preview").src = selectedImage;
-            document.getElementById("image-preview").style.display = "inline-block";
+            document.getElementById("image-preview").style.display = "block";
         };
         reader.readAsDataURL(file);
+    }
+
+    function deleteImage() {
+        selectedImage = null;
+        document.getElementById("image-preview").src = "";
+        document.getElementById("image-preview").style.display = "none";
     }
 
     function addMessage(text) {
