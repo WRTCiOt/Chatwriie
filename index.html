@@ -47,12 +47,31 @@
     <!-- Overlay für Hover-Effekt -->
     <div id="overlay"></div>
     <!-- Chat-Bubble-Bild -->
-    <img id="chat-bubble" src="chat-bubble.png" alt="Chat Bubble Image" onclick="openChat()">
+    <img id="chat-bubble" src="chat-bubble.png" alt="Chat Bubble Image">
     <!-- JavaScript für Chat öffnen -->
     <script>
+        // Funktion zum Öffnen des Chats
         function openChat() {
             window.open("chat.html", "_self");
         }
+
+        // Event Listener für das Klicken auf das Bild
+        document.getElementById("chat-bubble").addEventListener("click", function(event) {
+            openChat();
+        });
+
+        // Event Listener für das Verhindern des Kontextmenüs (Rechtsklick)
+        document.getElementById("chat-bubble").addEventListener("contextmenu", function(event) {
+            event.preventDefault();
+        });
+
+        // Event Listener für das Verhindern des Halten-Ereignisses auf mobilen Geräten
+        document.getElementById("chat-bubble").addEventListener("touchstart", function(event) {
+            // Verhindern des Standardverhaltens
+            event.preventDefault();
+            // Öffnen des Chats
+            openChat();
+        });
     </script>
 </body>
 </html>
