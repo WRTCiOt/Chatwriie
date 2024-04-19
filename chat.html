@@ -19,7 +19,7 @@
       transform: translateX(-50%);
       width: 80%;
       max-width: 600px;
-      background-color: #2e2d2d; /* Background color for input area */
+      background-color: #2e2d2d;
       border-radius: 20px;
       padding: 10px;
       color: white;
@@ -28,9 +28,9 @@
     #message-input {
       width: 100%;
       height: 40px;
-      background-color: #333; /* Background color for input field */
+      background-color: #333;
       border: none;
-      border-radius: 20px; /* Add border radius for rounded corners */
+      border-radius: 20px;
       padding: 5px;
       color: white;
     }
@@ -39,7 +39,7 @@
       max-width: 70%;
       margin: 10px;
       padding: 10px;
-      background-color: #0080ff; /* Message bubble color */
+      background-color: #0080ff;
       color: white;
       border-radius: 10px;
       float: right;
@@ -47,7 +47,30 @@
     }
 
     .response {
-      background-color: #404040; /* Green color for response message */
+      background-color: #404040;
+    }
+
+    @media only screen and (max-width: 600px) {
+      #input-area {
+        bottom: 2vw;
+        width: 80vw;
+        max-width: 60vw;
+        border-radius: 2vw;
+        padding: 2vw;
+      }
+
+      #message-input {
+        height: 4vw;
+        border-radius: 2vw;
+        padding: 0.5vw;
+      }
+
+      .message {
+        max-width: 70vw;
+        margin: 2vw;
+        padding: 2vw;
+        border-radius: 1vw;
+      }
     }
   </style>
 </head>
@@ -70,7 +93,7 @@
           
           setTimeout(() => {
             addResponse("Es ist leider noch niemand hier:)", messageInput);
-          }, 1000); // 1 Sekunde Verzögerung für die Antwort
+          }, 1000);
           
           messageInput.value = "";
         }
@@ -83,7 +106,7 @@
       newMessage.classList.add("message");
 
       messageContainer.appendChild(newMessage);
-      messageContainer.scrollTop = messageContainer.scrollHeight; // Auto scroll to bottom
+      messageContainer.scrollTop = messageContainer.scrollHeight;
     }
 
     function addResponse(text, messageInput) {
@@ -92,7 +115,7 @@
       responseMessage.classList.add("message", "response");
 
       messageContainer.appendChild(responseMessage);
-      messageContainer.scrollTop = messageContainer.scrollHeight; // Auto scroll to bottom
+      messageContainer.scrollTop = messageContainer.scrollHeight;
 
       messageInput.value = "";
     }
