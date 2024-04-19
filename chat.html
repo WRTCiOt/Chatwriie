@@ -1,124 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WRTCiO Chat</title>
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WRTCiO Chat</title>
+<style>
     body {
-      background-color: #2e2d2d;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
+        background-color: #2e2d2d;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
     }
 
     #input-area {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80%;
-      max-width: 600px;
-      background-color: #2e2d2d;
-      border-radius: 20px;
-      padding: 10px;
-      color: white;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        max-width: 600px;
+        background-color: #2e2d2d;
+        border-radius: 20px;
+        padding: 10px;
+        color: white;
+        display: flex;
     }
 
     #message-input {
-      width: 100%;
-      height: 40px;
-      background-color: #333;
-      border: none;
-      border-radius: 20px;
-      padding: 5px;
-      color: white;
+        flex: 1;
+        width: 100%;
+        height: 40px;
+        background-color: #333;
+        border: none;
+        border-radius: 20px;
+        padding: 5px;
+        color: white;
+        background-image: url('file:///C:/Users/Rudi/Desktop/chat%20gegen/galerie-öffnen.png'); /* Hier wird der absolute Pfad verwendet */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    #gallery-icon {
+        width: 40px;
+        height: 40px;
+        margin-left: 10px;
+        cursor: pointer;
     }
 
     .message {
-      max-width: 70%;
-      margin: 10px;
-      padding: 10px;
-      background-color: #0080ff;
-      color: white;
-      border-radius: 10px;
-      float: right;
-      clear: both;
+        max-width: 70%;
+        margin: 10px;
+        padding: 10px;
+        background-color: #0080ff;
+        color: white;
+        border-radius: 10px;
+        float: right;
+        clear: both;
     }
 
     .response {
-      background-color: #404040;
+        background-color: #404040;
     }
 
     @media only screen and (max-width: 600px) {
-      #input-area {
-        bottom: 2vw;
-        width: 80vw;
-        max-width: 60vw;
-        border-radius: 2vw;
-        padding: 2vw;
-      }
+        #input-area {
+            bottom: 2vw;
+            width: 80vw;
+            max-width: 60vw;
+            border-radius: 2vw;
+            padding: 2vw;
+        }
 
-      #message-input {
-        height: 10vw; /* Größere Höhe für die Texteingabe auf mobilen Geräten */
-        border-radius: 2vw;
-        padding: 0.5vw;
-      }
+        #message-input {
+            height: 10vw;
+            border-radius: 2vw;
+            padding: 0.5vw;
+        }
 
-      .message {
-        max-width: 70vw;
-        margin: 2vw;
-        padding: 2vw;
-        border-radius: 1vw;
-      }
+        .message {
+            max-width: 70vw;
+            margin: 2vw;
+            padding: 2vw;
+            border-radius: 1vw;
+        }
+
+        #gallery-icon {
+            width: 10vw;
+            height: 10vw;
+        }
     }
-  </style>
+</style>
 </head>
 <body>
-  <div id="input-area">
+<div id="input-area">
     <input type="text" id="message-input" placeholder="Write here" onkeypress="handleKeyPress(event)">
-  </div>
+    <img id="gallery-icon" src="galerie-öffnen.png" alt="Gallery Icon" onclick="openGallery()">
+</div>
 
-  <div id="message-container"></div>
+<div id="message-container"></div>
 
-  <script>
+<script>
     let messageContainer = document.getElementById("message-container");
+    let selectedImage = null;
 
     function handleKeyPress(e) {
-      if (e.key === "Enter") {
-        let messageInput = document.getElementById("message-input");
-        let messageText = messageInput.value;
-        if (messageText.trim() !== "") {
-          addMessage(messageText);
-          
-          setTimeout(() => {
-            addResponse("Es ist leider noch niemand hier:)", messageInput);
-          }, 1000);
-          
-          messageInput.value = "";
+        if (e.key === "Enter") {
+            let messageInput = document.getElementById("message-input");
+            let messageText = messageInput.value;
+            if (messageText.trim() !== "") {
+                if (selectedImage) {
+                    addMessageWithImage(messageText, selectedImage);
+                    selectedImage = null;
+                } else {
+                    addMessage(messageText);
+                }
+                messageInput.value = "";
+            }
         }
-      }
+    }
+
+    function openGallery() {
+        selectedImage = "file:///C:/Users/Rudi/Desktop/chat%20gegen/galerie-öffnen.png"; // Hier wird der absolute Pfad verwendet
+        updateImagePreview(selectedImage);
+    }
+
+    function updateImagePreview(imageSrc) {
+        let messageInput = document.getElementById("message-input");
+        messageInput.style.backgroundImage = `url(${imageSrc})`;
+        messageInput.style.backgroundSize = "cover";
     }
 
     function addMessage(text) {
-      let newMessage = document.createElement("div");
-      newMessage.textContent = text;
-      newMessage.classList.add("message");
+        let newMessage = document.createElement("div");
+        newMessage.textContent = text;
+        newMessage.classList.add("message");
 
-      messageContainer.appendChild(newMessage);
-      messageContainer.scrollTop = messageContainer.scrollHeight;
+        messageContainer.appendChild(newMessage);
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
+
+    function addMessageWithImage(text, imageSrc) {
+        let newMessage = document.createElement("div");
+        newMessage.textContent = text;
+        newMessage.classList.add("message");
+
+        let image = document.createElement("img");
+        image.src = imageSrc;
+        image.style.maxWidth = "100px"; // Kleinere Form des Bildes im Chat
+        image.style.borderRadius = "5px";
+        newMessage.appendChild(image);
+
+        messageContainer.appendChild(newMessage);
+        messageContainer.scrollTop = messageContainer.scrollHeight;
     }
 
     function addResponse(text, messageInput) {
-      let responseMessage = document.createElement("div");
-      responseMessage.textContent = text;
-      responseMessage.classList.add("message", "response");
+        let responseMessage = document.createElement("div");
+        responseMessage.textContent = text;
+        responseMessage.classList.add("message", "response");
 
-      messageContainer.appendChild(responseMessage);
-      messageContainer.scrollTop = messageContainer.scrollHeight;
+        messageContainer.appendChild(responseMessage);
+        messageContainer.scrollTop = messageContainer.scrollHeight;
 
-      messageInput.value = "";
+        messageInput.value = "";
     }
-  </script>
+</script>
 </body>
 </html>
